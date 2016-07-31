@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Tasks{% endblock title %}
+{% block administration_header %}
+{% trans "Add Task" %}
+{% endblock administration_header %}
+{% block task_selected %}
+selected
+{% endblock task_selected %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<form class="form-horizontal  martop-20" method="post" action="{% url 'add_task' episode_no %}">
+			{% csrf_token %}
+			{% for field in form.visible_fields %}
+			<div class="control-group">
+				<label class="control-label">{{ field.label_tag }}</label>
+				<div class="controls">
+					{{ field }}
+					{% if field.errors %}
+					{% for error in field.errors %}
+					<label class="error">{{ error|escape }}</label>
+					{% endfor %}
+					{% endif %}
+				</div>
+			</div>
+			{% endfor %}
+			<div class="control-group">
+				<div class="controls">
+					<p>
+						<button class="btn btn-success" type="submit">
+							{% trans "Register" %}
+						</button>
+						<a href="{% url 'task_list' %}" class="btn" type="button"> {% trans "Cancel" %} </a>
+					</p>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock content %}
+{% block js %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap-datepicker.js"></script>
+<script type="text/javascript">
+	$("#id_completion_date").datepicker({format: 'yyyy-mm-dd'});
+</script>
+{% endblock js %}
+{% block css %}
+<link href="{{ STATIC_URL }}css/chosen.css" rel="stylesheet" type="text/css" />
+<link href="{{ STATIC_URL }}css/datepicker.css" rel="stylesheet" type="text/css" />
+{% endblock css %}
+

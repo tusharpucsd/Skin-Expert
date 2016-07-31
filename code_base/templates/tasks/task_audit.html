@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Tasks{% endblock title %}
+{% block administration_header %}
+{% trans "Tasks" %}
+{% endblock administration_header %}
+
+{% block audit_selected %}
+selected
+{% endblock audit_selected %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		{% if object_list %}
+		<table class="table table-striped" id="id_content_table">
+			<thead>
+				<tr>
+					<th class="head" scope="col">{% trans "TimeStamp" %}</th>
+					<th class="head" scope="col">{% trans "User" %}</th>
+					<th class="head" scope="col">{% trans "Action" %}</th>
+					<th class="head" scope="col">{% trans "Message" %}</th>
+				</tr>
+			</thead>
+			{% for obj in object_list %}
+			<tr>
+				<td style="width:6%">{{obj.timestamp|date:"F d, Y, h:i:s A" }}</td>
+				<td style="width:2%">{{obj.user.first_name|capfirst }}</td>
+				<td style="width:2%">{{obj.action.name }}</td>
+				<td style="width:15%">{{ obj.user.first_name|capfirst }} {{ obj.data.msg }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% else %}
+		 No audit log to view.
+		{% endif %}
+		
+		{% if is_paginated %}
+			{% include "paginate.html" %}
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

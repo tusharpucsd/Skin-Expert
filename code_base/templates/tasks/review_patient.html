@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Review Patient{% endblock title %}
+{% block administration_header %}
+{% trans "Review Patient" %}
+{% endblock administration_header %}
+
+{% block task_selected %}
+selected
+{% endblock task_selected %}
+
+{% block content %}
+
+<table class="table table-striped">
+	<tr>
+		<th class="head" scope="col" colspan="2">PATIENT REVIEW DETAILS</th>
+	</tr>
+	<tr>
+		<td>Patient's Name</td>
+		<td> {{ task.episode.patient.profile.user.first_name }}&nbsp;{{ task.episode.patient.profile.user.last_name }} </td>
+	</tr>
+	<tr>
+		<td>Date Of Birth</td>
+		<td>{{ task.episode.patient.dob }} </td>
+	</tr>
+	<tr>
+		<td>Ethinic Origin</td>
+		<td>{{ task.episode.patient.ethnic_origin }} </td>
+	</tr>
+	<tr>
+		<td> Smoke Status</td>
+		<td>{{task.episode.smoke|yesno:"Yes,No" }}</td>
+	</tr>
+	<tr>
+		<td>  Smoking Frequnecy ? </td>
+		<td>{{task.episode.smoke_frequency|default:"--" }}</td>
+	</tr>
+	
+	<tr>
+		<td> Alcohol Intake Status</td>
+		<td> {{ task.episode.alcohol|yesno:"Yes,No" }} </td>
+	</tr>
+	<tr>
+		<td> Alcohol Intake Quantity</td>
+		<td>{{task.episode.alcohol_quantity|default:"--" }}</td>
+	</tr>
+	<tr>
+		<td>Family history of Skin Disease</td><td> {{ task.episode.family_history }} </td>
+	</tr>
+	<tr>
+		<td>Known Allergies</td><td> {{ task.episode.allergies }} </td>
+	</tr>
+	<tr>
+		<td>Previous Diagnoses of Skin Disease</td><td>{{ task.episode.prev_disease }} </td>
+	</tr>
+	<tr>
+		<td>Current Medication (if any)</td><td>{{ task.episode.current_medication }} </td>
+	</tr>
+	<tr>
+		<td>Other Disease</td><td>{{ task.episode.other_disease }} </td>
+	</tr>
+	<tr>
+		<td>Patient's Comments</td><td> {{ task.episode.comments }}</td>
+	</tr>
+</table>
+<div class="clearfix">
+	&nbsp;
+</div>
+<table class="table table-striped" width="100%" cellspacing="0" cellpadding="2">
+	<tr>
+		<th class="head" scope="col" colspan="2">IMAGES POSTED</th>
+	</tr>
+	<tr>
+		<td style="text-align:center"> Image 1</td>
+		<td style="text-align:center"> Image 2</td>
+	</tr>
+	<tr>
+		<td style="text-align:center">
+		<div class="img">
+			<a href="javascript:void(0);" data-toggle="modal" data-target="#image1"> <img src="{{MEDIA_URL}}/{{ task.episode.image1 }}" /> </a>
+		</div>
+		<div id="image1" class="modal hide fade" tabindex="-1">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					x
+				</button>
+				<p>&nbsp;</p>
+			</div>
+			<div class="modal-body">
+				<img src="{{MEDIA_URL}}/{{ task.episode.image1 }}" />
+			</div>
+			<div class="modal-footer"></div>
+		</div></td>
+		<td style="text-align:center">
+		<div class="img">
+			<a href="javascript:void(0);" data-toggle="modal" data-target="#image2"> <img src="{{MEDIA_URL}}/{{ task.episode.image2 }}"  /> </a>
+		</div>
+		<div id="image2" class="modal hide fade" tabindex="-1">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					x
+				</button>
+				<p>&nbsp;</p>
+			</div>
+			<div class="modal-body">
+				<img src="{{MEDIA_URL}}/{{ task.episode.image2 }}" />
+			</div>
+			<div class="modal-footer"></div>
+		</div></td>
+	</tr>
+
+</table>
+
+<div class="clearfix">
+	&nbsp;
+</div>
+{% if task.assigned_to.user == request.user %}
+
+<table class="table bg" width="100%" cellspacing="0" cellpadding="2" border="0">
+	<tr >
+		<th class="head" scope="col" colspan="2">Feedback</th>
+	</tr>
+	<tr>
+		<td colspan="2">
+		<form class="form-horizontal  martop-20" method="post" action="{% url 'task_review' task.id %}">
+			{% csrf_token %}
+			{{ form.episode }}
+			<table width="100%" border="0" cellspacing="0" cellpadding="2">
+				<tr>
+
+					<td width="33%" scope="col">{{ form.feedback.label }}</td>
+					<td width="4%" scope="col">&nbsp;</td>
+					<td width="63%" scope="col">{{ form.feedback }}
+					{% if form.feedback.errors %}
+					{% for error in form.feedback.errors %} <label class="error" for="id_feedback">{{ error|escape }}</label> {% endfor %}
+					{% endif %} </td>
+				</tr>
+				<tr>
+
+					<td width="33%" scope="col">{{ form.options.label }}</td>
+					<td width="4%" scope="col">&nbsp;</td>
+					<td width="63%" scope="col">{{ form.options }}
+					{% if form.options.errors %}
+					{% for error in form.options.errors %} <label class="error" for="id_options">{{ error|escape }}</label> {% endfor %}
+					{% endif %} </td>
+				</tr>
+				<tr class="text-center">
+					<td colspan="3" style="text-align:center !important">
+					<button class="btn btn-primary" type="submit">
+						{% trans "update" %}
+					</button> &nbsp;&nbsp; <a href="{% url 'task_list' %}" class="btn" type="button"> {% trans "Cancel" %} </a></td>
+				</tr>
+			</table>
+		</form></td>
+	</tr>
+</table>
+
+{% else %}
+<table class="table bg" width="100%" cellspacing="0" cellpadding="2" border="0">
+	<tr >
+		<th class="head" scope="col" colspan="2">Feedback</th>
+	</tr>
+	<tr>
+		<td>Doctor's Comments</td>
+		<td>
+			{{ task.episode.feedback }}
+		</td>
+	</tr>
+</table>
+<div class="control-group">
+	<div class="controls">
+		<p>
+			<a href="{% url 'patient_list' %}" class="btn btn-success pull-right" type="button"> {% trans "Cancel" %} </a>
+		</p>
+	</div>
+</div>
+
+{% endif %}
+{% endblock content %}
+{% block js %}
+<script src="{{ STATIC_URL }}js/chosen/chosen.jquery.min.js"></script>
+{% endblock js %}
+{% block css %}
+<link href="{{ STATIC_URL }}css/chosen.css" rel="stylesheet" />
+{% endblock css %}

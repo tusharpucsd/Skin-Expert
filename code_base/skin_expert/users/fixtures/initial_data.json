@@ -1,0 +1,1 @@
+[{"pk": 1, "model": "users.role", "fields": {"code": "doctor", "name": "Doctor"}}, {"pk": 2, "model": "users.role", "fields": {"code": "callcenter", "name": "Call center operative"}}, {"pk": 3, "model": "users.role", "fields": {"code": "mgmtteam", "name": "Management Team"}}, {"pk": 4, "model": "users.role", "fields": {"code": "sysadmin", "name": "System Administrator"}}]

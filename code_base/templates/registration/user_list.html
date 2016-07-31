@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Users{% endblock title %}
+
+{% block user_selected %}
+selected
+{% endblock user_selected %}
+
+{% block administration_header %}
+{% trans "Users" %}
+{% endblock administration_header %}
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		{% if not object_list %}
+
+		<div class="alert martop-20">
+			{% blocktrans %}
+			No Task for you
+			{% endblocktrans %}
+			<a href="{% url 'register' %}">{% trans "here" %}</a>
+			{% blocktrans %}
+			to add one.
+			{% endblocktrans %}
+		</div>
+		{% else %}
+		{% if messages %}
+		<div class="alert martop-20">
+			{% for message in messages %}
+			<span>{{ message }}</span>
+			{% endfor %}
+		</div>
+		{% endif %}
+		<div class="pull-right">
+			<a href="{% url 'register' %}" class="btn">
+				<i class="icon-plus"></i>
+				{% trans "Add User" %}</a>
+				<a href="javascript:void(0);" id="id_delete_selected" class="btn " data-toggle="modal" data-target="#confirm_modal">
+				<i class="icon-trash"></i>
+				{% trans "Delete Selected" %}
+			</a>
+		</div>	
+
+		<p>
+			&nbsp;
+		</p>
+		<br />
+		
+		<table class="table table-striped" id="id_content_table">
+			<thead>
+				<tr>
+					<th class="head checkbox-column" scope="col">
+						<label class="checkbox">
+							<input type="checkbox" id="id_select_all">
+						</label>
+					</th>
+					<th class="head" scope="col">{% trans "First Name" %}</th>
+					<th class="head" scope="col">{% trans "Last Name" %}</th>
+					<th class="head" scope="col">{% trans "Email" %}</th>
+					<th class="head" scope="col">{% trans "Group" %}</th>
+					<th class="head" scope="col">{% trans "Action" %}</th>
+				</tr>
+			</thead>
+			{% for obj in object_list %}
+			<tr data-slug="{{ obj.id }}">
+				<td>
+					<label class="checkbox">
+						<input type="checkbox" class="select_row">
+					</label>
+				</td>
+				<td>{{obj.user.first_name }} </td>
+				<td>{{obj.user.last_name }}</td>
+				<td>{{obj.user.email }}</td>
+				<td>{{obj.role }}</td>
+				<td>
+					<div class="btn-group">
+					<a class="btn btn-small" href="{% url 'edit_user' obj.id %}" title="Edit">
+						<i class="icon-edit"></i>
+					</a>
+					<a class="btn btn-small delete-row" data-toggle="modal" data-target="#confirm_modal" title="Delete">
+						<i class="icon-trash"></i>
+					</a>
+					</div>
+				</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% endif %}
+		
+		{% if is_paginated %}
+			{% include "paginate.html" %}
+		{% endif %}
+	</div>
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.cookie.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/csrf_protection.js"></script>
+<script type="text/javascript">
+	var CONTEXT_VAR = {
+		app_name: 'user',		
+	};
+</script>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load i18n  custom_tag %}
+{% block title %}Patient{% endblock title %}
+{% block administration_header %}
+{% trans "Patients" %}
+{% endblock administration_header %}
+
+{% block patient_selected %}
+selected
+{% endblock patient_selected %}
+
+{% block content %}
+
+{% if messages %}
+<div class="alert martop-20">
+	{% for message in messages %}
+	<span>{{ message }}</span>
+	{% endfor %}
+</div>
+{% endif %}
+		
+{% if not object_list %}
+
+<div class="alert martop-20">
+	{% blocktrans %}
+	Sorry, no patients added. You can click
+	{% endblocktrans %}
+	<a href="{% url 'register_patient' %}">{% trans "here" %}</a>
+	{% blocktrans %}
+	to add one.
+	{% endblocktrans %}
+</div>
+{% else %}
+<a href="{% url 'register_patient' %}" class="btn pull-right">{% trans "Add Patient" %}</a>
+<p>
+	&nbsp;
+</p>
+<br />
+<table class="table table-striped" id="id_content_table">
+	<thead>
+		<tr>
+			<th class="head" scope="col">{% trans "Patient Name" %}</th>
+			<th class="head" scope="col">{% trans "Email" %}</th>
+			<th class="head" scope="col">{% trans "DOB" %}</th>
+			<th class="head" scope="col">{% trans "Latest Query" %}</th>
+			<th class="head" scope="col">{% trans "Status Of the Query" %}</th>
+			<th class="head" scope="col">{% trans "Action" %}</th>
+		</tr>
+	</thead>
+	{% for obj in object_list %}
+	<tr data-slug="{{ obj.id }}">
+		<td>{{obj.profile.user.first_name}} {{obj.profile.user.last_name}}</td>
+		<td>{{obj.profile.user.email}}</td>
+		<td>{{obj.dob}}</td>
+		<td>{% if obj.episodes.all.0.submitted_at.date  %}{{obj.episodes.all.0.submitted_at.date }}({{ obj.episodes.all.0.episode_no }}){% else %}N.A.{% endif %}</td>
+		<td>{% if obj.episodes.all.0.status %}<a href="{% url 'task_review' obj.episodes.all.0.tasks.all.0.id %}">{{obj.episodes.all.0.status|get_the_value:status }} -- Dr. {{ obj.episodes.all.0.tasks.all.0.assigned_to }} </a>{% else %}N.A.{% endif %}</td>
+		<td>
+			<div class="btn-group">
+			<a class="btn btn-small" href="{% url 'edit_patient' obj.id %}" title="Edit"> 
+				<i class="icon-edit"></i> 
+			</a>
+			<a class="btn btn-small delete-row" data-toggle="modal" data-target="#confirm_modal" title="Delete"> 
+				<i class="icon-trash"></i> 
+			</a>
+			</div>
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endif %}
+{% if is_paginated %}
+	{% include "paginate.html" %}
+{% endif %}
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.cookie.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/csrf_protection.js"></script>
+<script type="text/javascript">
+	var CONTEXT_VAR = {
+		app_name: 'patient',		
+	};
+</script>
+{% endblock %}

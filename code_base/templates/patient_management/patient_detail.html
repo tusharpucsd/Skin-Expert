@@ -1,0 +1,46 @@
+{% load i18n %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<table class="table table-bordered">
+			
+			<tr>
+				<td><label class="control-label pull-right">Name</label></td>
+				<td>
+					<label class="control-label">
+					{{ object.profile.user.first_name }} {{ object.profile.user.last_name }}
+					</label>
+				</td>
+			</tr>
+
+			<tr>
+				<td><label class="control-label pull-right">Email</label></td>
+				<td>
+				<label class="control-label">
+					{{ object.profile.user.email }}
+				</label>
+				</td>
+			</tr>
+
+			{% if object.profile.mobile_no %}
+			<tr>
+				<td><label class="control-label pull-right">Mobile No</label></td>
+				<td>
+					<label class="control-label">
+						{{ object.profile.mobile_no }}
+					</label>
+				</td>
+			</tr>
+			{% endif %}
+			{% if object.profile.phone_no %}
+			<tr>
+				<td><label class="control-label pull-right">Contact No</label></td>
+				<td>
+				<label class="control-label">
+					{{ object.profile.phone_no }}
+				</label>
+				</td>
+			</tr>
+			{% endif %}
+		</table>
+	</div>
+</div>

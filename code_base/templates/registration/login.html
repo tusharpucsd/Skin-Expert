@@ -1,0 +1,47 @@
+{% extends "login_base.html" %}
+{% load i18n %}
+{% block title %}Login{% endblock title %}
+{% block administration_header %}
+{% trans "Login" %}
+{% endblock administration_header %}
+{% block content %}
+<div class="span12">
+	<div class="offset3 span6">
+		<br />
+		<label class="error">{{ message }}</label>
+		
+	</div>
+	<form class="form-horizontal login" method="post" action="{% url 'login' %}">
+		{% csrf_token %}
+		{% for field in form.visible_fields %}
+		<div class="control-group">
+			<label class="control-label">{{ field.label_tag }}</label>
+			<div class="controls">
+				{{ field }}
+				{% if field.errors %}
+				{% for error in field.errors %}
+				<label class="error">{{ error|escape }}</label>
+				{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+		{% endfor %}
+		<div class="control-group">
+			<div class="controls">
+				<p>
+					<button class="btn btn-primary" type="submit">
+						{% trans "Login" %}
+					</button>
+					<button class="btn" type="reset">
+						{% trans "Reset" %}
+					</button>
+				</p>
+
+			</div>
+		</div>
+	</form>
+	<P class="pass">
+		<a href="{% url 'password_reset' %}"> {% trans "Forgot Password?" %} </a>
+	</P>
+</div>
+{% endblock content %}

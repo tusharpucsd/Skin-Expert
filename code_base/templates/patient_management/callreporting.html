@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+{% if edit %}{% trans "User Profile" %}{% else %}{% trans "Register User" %}{% endif %}
+{% endblock title %}
+{% block administration_header %}
+{% if edit %}{% trans "Edit User Profile" %}{% else %}{% trans "Register User" %}{% endif %}
+{% endblock administration_header %}
+
+{% block task_selected %}
+selected
+{% endblock task_selected %}
+
+{% block content %}
+<p class="title heading">
+	Call Reporting
+</p>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<form class="form-horizontal  martop-20" method="post" action="{% url 'call_reporting' patient.episode_no %}">
+			{% csrf_token %}
+			<div class="control-group">
+						<label class="control-label" for="id_patient">Patient</label>
+						<div class="controls" >
+							<span>{{ patient.patient.profile.user.get_full_name }}</span>
+						</div>
+			</div>
+			<div class="control-group">
+						<label class="control-label" for="id_username">{{form.call_time.label}}</label>
+						<div class="controls" >
+							{{form.call_time}}
+							{% if form.call_time.errors %}
+							{% for error in form.call_time.errors %}
+							<label class="error" for="id_call_time">{{ error|escape }}</label>
+							{% endfor %}
+							{% endif %}
+						</div>
+			</div>
+			<div class="control-group">
+						<label class="control-label" for="id_username">{{form.status.label}}</label>
+						<div class="controls" >
+							{{form.status}}
+							{% if form.status.errors %}
+							{% for error in form.status.errors %}
+							<label class="error" for="id_call_time">{{ error|escape }}</label>
+							{% endfor %}
+							{% endif %}
+						</div>
+			</div>
+			<div class="control-group">
+						<label class="control-label" for="id_username">{{ form.summary.label }}</label>
+						<div class="controls" >
+							{{ form.summary }}
+							{% if form.summary.errors %}
+							{% for error in form.summary.errors %}
+							<label class="error" for="id_summary">{{ error|escape }}</label>
+							{% endfor %}
+							{% endif %}
+						</div>
+			</div>
+			<div class="control-group">
+				<div class="controls contact_btn_cntrl" >
+					<input type="submit" name="button" id="btn_report" class="btn btn-primary" value={% trans 'Save'%}>
+					<input type="button" id="report_cnl_btn" name="" value="Cancel" class="btn btn-cancel" onclick="window.location='/task/'" />
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock content %}
+{% block js %}
+<script src="{{ STATIC_URL }}js/chosen/chosen.jquery.min.js"></script>
+<script src="{{ STATIC_URL }}js/user_management/register.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/tasks/contact.js"></script>
+{% endblock js %}
+{% block css %}
+<link href="{{ STATIC_URL }}css/datepicker.css" rel="stylesheet" type="text/css" >
+{% endblock css %}
+		

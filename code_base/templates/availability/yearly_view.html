@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% block title %}Yearly View {{ year }}{% endblock %}
+
+{% block availability_selected %}
+selected
+{% endblock availability_selected %}
+
+
+{% block content %}
+	<p style="font-weight: bold; ">
+	<a href="{% url 'monthly-view' current_datetime.year current_datetime.month %}"> &larr; Back to Monthly View</a>
+	</p>
+    <h3>
+        <a href="{% url 'yearly-view' last_year %}" 
+           title="Last Month">&larr;</a>
+        Yearly View {{ year }}
+        <a href="{% url 'yearly-view' next_year %}" 
+           title="Next Month">&rarr;</a>
+    </h3>
+    
+    {% if by_month %}
+    <table class="year-view table table-striped">
+        <thead>
+            <tr>
+                <th class="head" scope="col">Month</th>
+                <th class="head" scope="col">Date</th>
+                <th class="head" scope="col">Doctors</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for dt,occurrences in by_month %}
+        <tr class="month-divider">
+            <th rowspan="{{ occurrences|length }}">
+                <a href="{% url 'monthly-view' dt.year dt.month %}">
+                    {{ dt|date:"F" }}</a>
+            </th>
+            {% for o in occurrences %}
+           
+            <td>{{ o.date }}</td>
+            <td>{{ o.doctor }}</td>
+        </tr>
+            {% if not forloop.last %}
+        <tr>
+            {% endif %}
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No events occurring in {{ year }}</p>
+    {% endif %}
+{% endblock %}

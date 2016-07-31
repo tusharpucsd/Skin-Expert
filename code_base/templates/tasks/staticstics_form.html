@@ -1,0 +1,74 @@
+{% load i18n %}
+<form class="form-horizontal  martop-20" method="post" action="{% url 'task_staticstics' %}" id="staticstics_form">
+	{% csrf_token %}
+	<div class="control-group">
+		<label class="control-label" for="id_type">{{form.type.label}}</label>
+		<div class="controls">
+			{{form.type}}
+			{% if form.type.errors %}
+			{% for error in form.type.errors %}
+			<label class="error" for="id_type">{{ error|escape }}</label>
+			{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="id_users">{{form.users.label}}</label>
+		<div class="controls">
+			{{form.users}}
+			{% if form.users.errors %}
+			{% for error in form.users.errors %}
+			<label class="error" for="id_users">{{ error|escape }}</label>
+			{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="id_from_date">{{form.from_date.label}}</label>
+		<div class="controls">
+			{{form.from_date}}
+			{% if form.from_date.errors %}
+			{% for error in form.from_date.errors %}
+			<label class="error" for="id_from_date">{{ error|escape }}</label>
+			{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="id_to_date">{{form.to_date.label}}</label>
+		<div class="controls">
+			{{form.to_date}}
+			{% if form.to_date.errors %}
+			{% for error in form.to_date.errors %}
+			<label class="error" for="id_to_date">{{ error|escape }}</label>
+			{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="id_time_choice">{{form.time_choice.label}}</label>
+		<div class="controls">
+			{{form.time_choice}}
+			{% if form.time_choice.errors %}
+			{% for error in form.time_choice.errors %}
+			<label class="error" for="id_time_choice">{{ error|escape }}</label>
+			{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	<div class="control-group text-right">
+		<div class="controls">
+			<p>
+				{{ form.mode }}
+				<button class="btn btn-primary" type="button" id="btn_chart">
+					{% trans "Render Chart" %}
+				</button>
+				<button class="btn" type="button" id="btn_export">
+					{% trans "Export to Excel" %}
+				</button>
+				
+			</p>
+				
+		</div>
+	</div>
+</form>

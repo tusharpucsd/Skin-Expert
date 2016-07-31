@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load i18n  custom_tag %}
+{% block title %}Patient{% endblock title %}
+{% block administration_header %}
+{% trans "Patients" %}
+{% endblock administration_header %}
+
+{% block task_selected %}
+selected
+{% endblock task_selected %}
+
+{% block breadcrumb %}
+<ul class="breadcrumb">
+	<li>
+		<a href="{% url 'task_list' %}">Tasks</a><span class="divider">/</span>
+	</li>
+	<li class="active">
+		Collect Patient Details
+	</li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<p class="title heading">
+	Collect Patient Details
+</p>
+<table class="table table-striped" width="100%" cellspacing="0" cellpadding="2">
+	<tr>
+		<th class="head" scope="col" colspan="2">Personal Information</th>
+	</tr>
+	<tr>
+		<td><label class="control-label">Name</label></td>
+		<td><label class="control-label"> {{ object.profile.user.first_name }} {{ object.profile.user.last_name }} </label></td>
+	</tr>
+
+	<tr>
+		<td><label class="control-label">Email</label></td>
+		<td><label class="control-label"> {{ object.profile.user.email }} </label></td>
+	</tr>
+
+	{% if object.profile.mobile_no %}
+	<tr>
+		<td><label class="control-label">Mobile No</label></td>
+		<td><label class="control-label"> {{ object.profile.mobile_no }} </label></td>
+	</tr>
+	{% endif %}
+	{% if object.profile.phone_no %}
+	<tr>
+		<td><label class="control-label">Contact No</label></td>
+		<td><label class="control-label"> {{ object.profile.phone_no }} </label></td>
+	</tr>
+	{% endif %}
+</table>
+<p class="title">
+	HISTORY
+</p>
+<table  class="table table-striped" width="100%" cellspacing="0" cellpadding="2">
+	<tr>
+		<th class="head" scope="col">Submitted At</th>
+		<th class="head" scope="col">Doctor Assigned</th>
+		<th class="head" scope="col">Patient's Comments</th>
+		<th class="head" scope="col">Doctor's Feedback</th>
+		<th class="head" scope="col">Status</th>
+	</tr>
+	{% for episode in object.episodes.all %}
+	<tr>
+		<td>{{ episode.submitted_at|default:"--" }}</td>
+		<td>{{ episode.tasks.all.0.assigned_to|default:"--" }}</td>
+		<td>{{ episode.comments|default:"--" }}</td>
+		<td>{{ episode.feedback|default:"--" }}</td>
+		<td>{{ episode.status|get_the_value:status }}</td>
+	</tr>
+	{% endfor %}
+</table>
+<p class="title">
+	Call Reporting
+</p>
+<table  class="table table-striped" width="100%" cellspacing="0" cellpadding="2">
+		<form class="form-horizontal  martop-20" method="post" action="{% url 'call_reporting' episode_no %}">
+		{% csrf_token %}
+	<tr>
+		<th class="head" scope="col">Patient</th>
+		<th class="head" scope="col">Call Date</th>
+		<th class="head" scope="col">Summary</th>
+		<th class="head" scope="col">Status</th>
+		<th class="head" scope="col">Action</th>
+	</tr>
+	<tr>
+		<td>{{ object.profile.user.get_full_name|default:"--" }}</td>
+		<td>{{form.call_time}}</td>
+		<td>{{form.summary}}</td>
+		<td>{{form.status}}</td>
+		<td>
+			<div class="control-group">
+				<div class="controls contact_btn_cntrl" >
+					<input type="submit" name="button" id="btn_report" class="btn btn-primary" value={% trans 'Save'%}>
+					<input type="button" id="report_cnl_btn" name="" value="Cancel" class="btn btn-cancel" onclick="window.location='/task/'" />
+				</div>
+			</div>
+		</td>
+	</tr>
+	</form>
+</table>
+{% endblock %}
+{% block js %}
+<script src="{{ STATIC_URL }}js/chosen/chosen.jquery.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/tasks/contact.js"></script>
+{% endblock js %}
+{% block css %}
+<link href="{{ STATIC_URL }}css/datepicker.css" rel="stylesheet" type="text/css" >
+{% endblock css %}

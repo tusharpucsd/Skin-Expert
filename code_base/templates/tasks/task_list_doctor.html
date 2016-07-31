@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load i18n custom_tag %}
+{% block title %}Tasks{% endblock title %}
+{% block administration_header %}
+{% trans "Tasks" %}
+{% endblock administration_header %}
+
+{% block task_selected %}
+selected
+{% endblock task_selected %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<br/>
+		{% if not object_list %}
+
+		<div class="alert martop-20 msg">
+			{% blocktrans %}
+			No Task for you
+			{% endblocktrans %}		
+		</div>
+		{% else %}
+		
+		
+		<table class="table table-striped" id="id_content_table">
+			<thead>
+				<tr>
+					<th class="head" scope="col">{% trans "Patient Name" %}</th>
+					<th class="head" scope="col">{% trans "Submitted at" %}</th>
+					<th class="head" scope="col">{% trans "Status" %}</th>
+					<th class="head" scope="col">{% trans "Review Patient" %}</th>
+					<th class="head" scope="col">{% trans "RAG Ratings" %}</th>
+				</tr>
+			</thead>
+			{% for obj in object_list %}
+			<tr>
+				<td>{{obj.episode.patient.profile.user.first_name }} {{obj.episode.patient.profile.user.last_name }}</td>
+				<td>{{obj.episode.submitted_at|date:"F d, Y, h:i:s A" }}</td>
+				<td>{{obj.status|get_the_value:status}}</td>
+				<td><a href="{% url 'task_review' obj.id %}"> Review Patient</a></td>
+				<td class="{{ obj.ratings|get_the_value:ratings }}">&nbsp;</td>
+			</tr>
+			{% endfor %}
+		</table>
+		{% endif %}
+		
+		{% if is_paginated %}
+			{% include "paginate.html" %}
+		{% endif %}
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% block title %}Monthly View{% endblock %}
+{% block css %}
+<link href="{{STATIC_URL}}css/fullcalendar.css" rel="stylesheet" type="text/css" />
+<link href="{{STATIC_URL}}css/datepicker.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block availability_selected %}
+selected
+{% endblock availability_selected %}
+
+{% block content %}
+<h4><a href="{% url 'monthly-view' last_month.year last_month.month %}" title="Last Month">&larr;</a> {{ this_month|date:"F" }} <a title="View {{ this_month.year}}" href="{% url 'yearly-view' this_month.year %}"> {{ this_month|date:"Y" }}</a><a href="{% url 'monthly-view' next_month.year next_month.month %}" title="Next Month">&rarr;</a></h4>
+<div class="fc-view fc-view-month fc-grid">
+	<table class="month-view fc-border-separate">
+		<thead>
+			<tr class="fc-first fc-last">
+				<th class="fc-day-header fc-sun fc-widget-header fc-first" style="width:127px;">Sun</th>
+				<th class="fc-day-header fc-mon fc-widget-header" style="width:127px;">Mon</th>
+				<th class="fc-day-header fc-tue fc-widget-header" style="width:127px;">Tue</th>
+				<th class="fc-day-header fc-wed fc-widget-header" style="width:127px;">Wed</th>
+				<th class="fc-day-header fc-thu fc-widget-header" style="width:127px;">Thu</th>
+				<th class="fc-day-header fc-fri fc-widget-header" style="width:127px;">Fri</th>
+				<th class="fc-day-header fc-sat fc-widget-header fc-last" style="width:127px;">Sat</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for row in calendar %}
+			<tr class="fc-week{% if forloop.first %} fc-first{% endif %}{% if forloop.last %} fc-last{% endif %}">
+				{% for day,items in row  %}
+
+				<td class="fc-day fc-widget-content {% if day == today.day and this_month.month == today.month %} fc-today fc-state-highlight{% endif %}{% if forloop.first %} fc-first{% endif %}{% if forloop.last %} fc-last{% endif %}{% if can_add and day %} can_add{% endif %} {% if can_add and not items and day != 0 %}{% if day >= today.day and this_month.year >= today.year or this_month.month > today.month and this_month.year >= today.year %} add_event{% endif %}{% endif %}"
+				rel="{% if not items %}{% if day >= today.day and this_month.year >= today.year or this_month.month > today.month and this_month.year >= today.year %}{% url 'set-event' %}{% endif %}{% endif %}" 
+				data-date="{{day}}-{{this_month.month}}-{{this_month.year}}"
+				title="{% if can_add and not items and day != 0 %}{% if day >= 1 and day >= today.day and this_month.year >= today.year or this_month.month > today.month and this_month.year >= today.year %} Click to Set Availability{% endif %}{% endif %}"> 
+				{% if day %}
+				<div style="min-height: 106px;">
+					<div class="fc-day-number">
+						{{ day }}
+					</div>
+					<div class="fc-day-content">
+						<div style="position: relative; height: 0px;">
+							{% if items %}
+							<ul>
+								{% for item in items %}
+								<li>
+									Dr. {{ item.doctor|capfirst }}
+								</li>
+								{% endfor %}
+							</ul>
+							{% endif %}
+						</div>
+					</div>
+				</div> {% endif %} </td>
+				{% endfor %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>
+<div id="event_details" class="modal hide fade" tabindex="-1">	
+</div>
+{% endblock %}
+{% block js %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery.cookie.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/csrf_protection.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/availability/event.js"></script>
+<!--<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap-datepicker.js"></script>-->
+{% endblock %}

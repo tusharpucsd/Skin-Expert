@@ -1,0 +1,36 @@
+{% load i18n %}
+<div class="outer nav">
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span12">
+				<ul class="topnav">
+					<li class="task {% block task_selected %}{% endblock %}">
+						<a href="{% url 'task_list' %}"><span>{% trans "TASKS" %}</span></a>
+					</li>
+					{% ifequal request.user.profile.role.name "Management Team" %}
+					<li class="user {% block user_selected %}{% endblock %}">
+						<a href="{% url 'users_list' %}"><span>USER</span></a>
+					</li>
+					<li class="patient {% block patient_selected %}{% endblock %}">
+						<a href="{% url 'patient_list' %}"><span>PATIENT</span></a>
+					</li>
+					<li class="audit {% block audit_selected %}{% endblock %}">
+						<a href="{% url 'task_audit' %}"><span>AUDIT TRAILS</span></a>
+					</li>
+					
+					{% endifequal %}
+
+					<li class="availibility {% block availibility_selected %}{% endblock %}">
+						<a href="{% url 'today' %}"><span> CHECK AVAILABILITY</span></a>
+					</li>
+					<li class="profile {% block profile_selected %}{% endblock %}">
+						<a href="{% url 'myprofile' %}"><span>PROFILE SETTINGS</span></a>
+					</li>
+					<li class="log">
+						<a href="{% url 'logout' %}"><span>LOG OFF</span></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

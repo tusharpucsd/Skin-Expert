@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Add Event{% endblock %}
+{% block content %}
+    <h3>Add Event</h3>
+    {{ recurring_form.non_field_errors }}
+    {% if recurrence_form.errors %}
+    <label class="error">Please fix any errors.</label>
+    {% endif %}
+    <form method="post" action="">
+    	{% csrf_token %}
+    <table class="add_event">
+        <tfoot>
+            <tr>
+                <td colspan="2"><input type="submit" value="Submit" /></td>
+            </tr>
+        </tfoot>
+        <tbody>
+        {% include "availability/recurring_form_part.html" %}
+        </tbody>
+    </table>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load nvd3_tags %}
+{% load static %}
+{% block title %}Staticstics
+{% endblock title %}
+
+{% block stat_selected %}
+selected
+{% endblock stat_selected %}
+
+{% block css %}
+<link media="all" href="{{STATIC_URL}}css/nv.d3.min.css" type="text/css" rel="stylesheet" />
+<link href="{{STATIC_URL}}css/datepicker.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block js %}
+<!--<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap/bootstrap-datepicker.js"></script>-->
+<script type="text/javascript" src="{{ STATIC_URL }}js/tasks/contact.js"></script>
+{% endblock %}
+{% block content %}
+<div class="row-fluid">
+
+	<div class="span12">
+		<div class="span6">{% include "tasks/staticstics_form.html" %}</div>
+		<div class="span6">{% include "tasks/chart.html" %}</div>
+	</div>
+</div>
+
+
+
+{% endblock %}

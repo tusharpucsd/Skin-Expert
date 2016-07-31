@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}Query{% endblock title %}
+{% block administration_header %}
+{% trans "Create Query" %}
+{% endblock administration_header %}
+{% block task_selected %}
+selected
+{% endblock task_selected %}
+
+
+
+{% block content %}
+<div class="container-fluid">
+	<div class="row-fluid">
+		<form class="form-horizontal  martop-20" method="post">
+			{% csrf_token %}
+			<div class="span12">
+				<p class="title heading">
+					Add Query
+				</p>
+				{% for field in form.visible_fields %}
+				<div class="control-group">
+					<label class="control-label">{{ field.label_tag }}</label>
+					<div class="controls">
+						{{ field }}
+						{% if field.errors %}
+						{% for error in field.errors %}
+						<label class="error">{{ error|escape }}</label>
+						{% endfor %}
+						{% endif %}
+					</div>
+				</div>
+				{% endfor %}
+				<div class="control-group">
+					<div class="controls">
+						<p>
+							<button class="btn btn-success" type="submit">
+								{% trans "Submit" %}
+							</button>
+							<a href="{% url 'task_list' %}" class="btn" type="button"> {% trans "Cancel" %} </a>
+						</p>
+					</div>
+				</div>
+		</form>
+	</div>
+</div>
+{% endblock content %}
+{% block js %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/chosen/chosen.jquery.min.js"></script>
+{% endblock js %}
+{% block css %}
+<link href="{{ STATIC_URL }}css/chosen.css" rel="stylesheet" type="text/css" />
+{% endblock css %}
+
