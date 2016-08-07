@@ -1,4 +1,4 @@
-# Create your views here.
+# Create your views here....
 from django.views.generic import FormView, View, ListView
 from django.views.generic.edit import DeleteView
 from django.shortcuts import redirect
